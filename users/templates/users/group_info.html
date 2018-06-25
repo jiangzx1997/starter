@@ -1,0 +1,61 @@
+{% extends "ddl/base.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+  <h2 style="display: inline;"> 
+    {{group.name}}
+  </h2>
+  {% if user == group.leader %}
+  <small>
+    <a href = "{% url 'users:change_group_name' group.id %}"> edit </a>
+  </small>
+  {% endif %}
+{% endblock header %}
+
+<!--
+<style type="text/css">
+  p {text-indent: 1cm}
+</style>
+-->
+
+{% block content %}
+  {% if user == group.leader %}
+    <div style = "text-align:right;">
+      <small>
+        <a href = "{% url 'users:change_member' group.id %}"> Edit </a>
+      </small>
+    </div>
+  {% endif %}
+
+
+  <table class="table">
+	<thead>
+		<tr>
+			<th> User-ID </th>
+			<th> User Name </th>
+			<th> User type </th>
+		</tr>
+	</thead>
+
+	<tbody>
+	  <tr>
+	    <td> {{group.leader.myuser.number}} </td>
+		<td> {{group.leader.username}} </td>
+		<td> Leader </td>
+	  </tr>
+	</tbody>
+	
+	<tbody>
+		{% for user in group.member.all %}
+		  {% if user != group.leader %}
+  		    <tr>
+		      <td> {{ user.myuser.number }} </td>
+			  <td> {{ user.username }} </td>
+			  <td>  Member </td>
+		    </tr>
+		  {% endif %}
+		{% endfor %}
+	</tbody>
+  </table>
+  
+{% endblock content %}

@@ -7,6 +7,10 @@
 
 {% block content %}
 
+<!--  <h4>
+    Group : {{ group.name }}
+  </h4>
+-->
 <!---
 	<div class = "panel-body">
 	  {% for user in group.member.all %}
@@ -36,7 +40,6 @@
 	</tbody>
 	
 	<tbody>
-	
 		{% for user in group.member.all %}
 		  {% if user != group.leader %}
   		    <tr>
@@ -47,22 +50,6 @@
 		    </tr>
 		  {% endif %}
 		{% endfor %}
-	
-<!--		<tr>
-			<td>001</td>
-			<td>Rammohan </td>
-			<td>A+</td>
-		</tr>
-		<tr>
-			<td>002</td>
-			<td>Smita</td>
-			<td>A</td>
-		</tr>
-		<tr>
-			<td>003</td>
-			<td>Rabindranath</td>
-			<td>A+</td>
-		</tr> -->
 	</tbody>
   </table>
 
@@ -80,7 +67,7 @@
   <br>
 
   <center> 
-    <input type="button" value="Back" onclick="window.location.href='{% url 'users:group' %}'">
+    <input type="button" value="Back" onclick="window.location.href='{% url 'users:change_group_name' group.id %}'">
 	&nbsp &nbsp &nbsp
 	<input type="button" value="Finish" onclick="window.location.href='{% url 'users:group' %}'"> 
   </center>
