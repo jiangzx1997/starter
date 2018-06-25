@@ -1,0 +1,62 @@
+{% extends "ddl/base.html" %}
+
+
+{% block header %}
+  <h2>My Task</h2>
+{% endblock header %}
+
+{% block content %}
+
+   <a href = "{% url 'ddl:new_entry' %}">add new task</a>
+   
+  {% for todo in todos %}
+	<div class = "panel panel-default">
+	  <div class = "panel-heading">
+	    <h3>
+		  {{ todo.date_ended|date:'Y-n-d' }}
+		  <small>
+		    <a href = "{% url 'ddl:edit_entry' todo.id %}">edit task</a>
+		  </small>
+          <small>
+            <a href="{% url 'ddl:delete_entry' todo.id %}">delete task</a>
+          </small>
+          <small>
+            <a href="{% url 'ddl:finish_entry' todo.id %}">finish task</a>
+          </small>
+		</h3>
+      </div>
+	  <div class = "panel-body">
+	    {{ todo.text|linebreaks }}
+	  </div>
+	</div><!-- panel -->
+  {% empty %}
+	There are no entries for this topic yet.
+  {% endfor %}
+  
+
+  {% for finished in finisheds %}
+    <div class = "panel panel-default">
+      <div class = "panel-heading">
+        <h3>
+          {{ finished.date_ended|date:'Y-n-d' }}
+          <small>
+            <a href = "{% url 'ddl:edit_entry' finished.id %}">edit task</a>
+          </small>
+          <small>
+            <a href="{% url 'ddl:delete_entry' finished.id %}">delete task</a>
+          </small>
+          <small>
+            <a href="{% url 'ddl:finish_entry' finished.id %}">finish task</a>
+          </small>
+        </h3>
+      </div>
+      <div class = "panel-body">
+        {{ finished.text|linebreaks }}
+      </div>
+    </div><!-- panel -->
+  {% empty %}
+    There are no entries for this topic yet.
+  {% endfor %}
+ 
+  
+{% endblock content %}

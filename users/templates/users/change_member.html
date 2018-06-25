@@ -1,0 +1,88 @@
+{% extends "ddl/base.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+  <h2>Change Member</h2>
+{% endblock header %}
+
+{% block content %}
+
+<!---
+	<div class = "panel-body">
+	  {% for user in group.member.all %}
+	    {{ user.username }}
+	  {% endfor %}
+	</div>
+-->
+
+	
+  <table class="table">
+	<thead>
+		<tr>
+			<th>User-ID</th>
+			<th>User Name</th>
+			<th>User type</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+
+	<tbody>
+	  <tr>
+	    <td> {{group.leader.myuser.number}} </td>
+		<td> {{group.leader.username}} </td>
+		<td> 组长 </td>
+		<td></td>
+	  </tr>
+	</tbody>
+	
+	<tbody>
+	
+		{% for user in group.member.all %}
+		  {% if user != group.leader %}
+  		    <tr>
+		      <td> {{ user.myuser.number }} </td>
+			  <td> {{ user.username }} </td>
+			  <td> 组员 </td>
+			  <td> <a href=" {% url 'users:del_member' group.id user.myuser.number %} ">删除</a> </td>
+		    </tr>
+		  {% endif %}
+		{% endfor %}
+	
+<!--		<tr>
+			<td>001</td>
+			<td>Rammohan </td>
+			<td>A+</td>
+		</tr>
+		<tr>
+			<td>002</td>
+			<td>Smita</td>
+			<td>A</td>
+		</tr>
+		<tr>
+			<td>003</td>
+			<td>Rabindranath</td>
+			<td>A+</td>
+		</tr> -->
+	</tbody>
+  </table>
+
+
+  <form action = "{% url 'users:change_member' group.id %}" method = 'post' class = "form">
+	{% csrf_token %}
+	{% bootstrap_form form %}
+
+	<button name = 'submit'>Add</button>
+	
+	
+	<input type = "hidden" name = "key" value = "act1"/>
+  </form>
+
+  <br>
+
+  <center> 
+    <input type="button" value="Back" onclick="window.location.href='{% url 'users:group' %}'">
+	&nbsp &nbsp &nbsp
+	<input type="button" value="Finish" onclick="window.location.href='{% url 'users:group' %}'"> 
+  </center>
+
+{% endblock content %}

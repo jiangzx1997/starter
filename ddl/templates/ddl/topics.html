@@ -1,0 +1,21 @@
+{% extends "ddl/base.html" %}
+
+{% block header %}
+  <h1>Task</h1>
+{% endblock header %}
+
+{% block content %}
+
+  <ul>
+    {% for topic in topics__ %}
+	  <li>
+	    <a href = "{% url 'ddl:topic' topic.id %}">{{ topic }}</a>
+	  </li>
+	{% empty %}
+	  <li>No topics have been added yet.</li>
+	{% endfor %}
+  </ul>
+  
+  <h3><a href = "{% url 'ddl:new_topic' %}">Add a new task</a></h3>
+
+{% endblock content %}

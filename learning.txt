@@ -1,0 +1,10 @@
+注意 要获悉可在模型中使用的各种字段，请参阅Django ModelField Reference（Django模型字段参考），其网址为https://docs.djangoproject.com/en/1.8/ref/models/fields/ 。
+
+18-7 模板文档 ：请浏览Django模板文档，其网址为https://docs.djangoproject.com/en/1.8/ref/templates/ 。自己开发项目时，可再回过头来参考该文档。
+
+Bootstrap基本上就是一个大型的样式设置工具集，它还提供了大量的模板，你可将它们应用于项目以创建独特的总体风格。对Bootstrap初学者来说，这些模板比各个样式设置工具
+使用起来要容易得多。要查看Bootstrap提供的模板，可访问http://getbootstrap.com/ ，单击Getting Started，再向下滚动到Examples部分，并找到Navbars in action。我们将使用模板Static
+top navbar，它提供了简单的顶部导航条、页面标题和用于放置页面内容的容器。
+
+注意 这个简化的Bootstrap模板适用于最新的浏览器，而较早的浏览器可能不能正确地渲染某些样式。完整的模板可在http://getbootstrap.com/getting-started/#examples/ 找
+到，它几乎在所有浏览器中都管用

@@ -1,0 +1,16 @@
+{% extends "ddl/base.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+  <h2>Create Group</h2>
+{% endblock header %}
+
+{% block content %}
+
+    <form action = "{% url 'users:new_group'%}" method = 'post' class = "form">
+	  {% csrf_token %}
+	  {% bootstrap_form form %}
+	  <button name = 'submit'>Create</button>
+	</form>
+	
+{% endblock content %}

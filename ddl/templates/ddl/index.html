@@ -1,0 +1,16 @@
+{% extends "ddl/base.html" %}
+
+{% block header %}
+  <div class = 'jumbotron'>
+    <h1>Never waste time.</h1>
+  </div>
+{% endblock header %}
+	
+{% block content %}
+  <h4>
+    <a href = "{% url 'users:register' %}">Register an account</a> to make your own DDL manage, and list the things you're going to do.
+  </h4>
+  <h4>
+    Whenever you recieve a new task, make an entry, write down what you need to do.
+  </h4>
+{% endblock content %}
