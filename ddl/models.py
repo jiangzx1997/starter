@@ -20,6 +20,7 @@ class Entry(models.Model):
     text = models.TextField()
     tag = models.BooleanField()
     date_added = models.DateTimeField(auto_now_add = True)
+    title = models.TextField()
     owner = models.ForeignKey(User, on_delete = models.CASCADE)
     
     def __str__(self):
