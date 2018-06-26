@@ -32,6 +32,7 @@ def register(request):
             new_user = MyUser()
             new_user.user = user
             new_user.number = form.cleaned_data['number']
+            new_user.name = form.cleaned_data['name']
             new_user.save()
             authenticate_user = authenticate(username = user.username, password = request.POST['password1'])
             login(request, authenticate_user)
@@ -61,12 +62,12 @@ def new_group(request):
             new_group.save()
             new_group.member.add(request.user)
             new_group.save()
-            return HttpResponseRedirect(reverse('users:change_member', args=[new_group.id]))
+            return HttpResponseRedirect(reverse('users:change_member', args=[new_group.id, 0]))
     context = {'group':group, 'form':form}
     return render(request, 'users/new_group.html', context)
 
 @login_required
-def change_group_name(request, group_id):
+def change_group_name(request, group_id, to_id):
     group = Group.objects.get(id = group_id)
     if request.method != 'POST':
         # 未提交数据, 创建一个空表单
@@ -76,13 +77,16 @@ def change_group_name(request, group_id):
         form = GroupForm(instance = group, data = request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('users:change_member', args=[group_id]))
-    context = {'group':group, 'form':form}
+            if (to_id == '0'):
+                return HttpResponseRedirect(reverse('users:change_member', args=[group_id, to_id]))
+            else:
+                return HttpResponseRedirect(reverse('users:group_info', args=[group_id]))
+    context = {'group':group, 'form':form, 'to_id':to_id}
     return render(request, 'users/change_group_name.html', context)
 
-    
+
 @login_required
-def add_member(request, group_id):
+def add_member(request, group_id, to_id):
 
     group = Group.objects.get(id = group_id)
     if group.leader != request.user:
@@ -90,7 +94,7 @@ def add_member(request, group_id):
     
     if request.method != 'POST':
         form = MemberIDForm()
-        context = {'group':group, 'form':form}
+        context = {'group':group, 'form':form, 'to_id': to_id}
         return render(request, 'users/change_member.html', context) 
     else:
         form = MemberIDForm(request.POST)
@@ -109,12 +113,12 @@ def add_member(request, group_id):
             if type == 'act1':
                 if not findflag:
                     group.member.add(aim)
-            return HttpResponseRedirect(reverse('users:change_member', args=[group_id]))
-    context = {'group':group, 'form':form}
+            return HttpResponseRedirect(reverse('users:change_member', args=[group_id, to_id]))
+    context = {'group':group, 'form':form, 'to_id': to_id}
     return render(request, 'users/change_member.html', context)
 
 @login_required
-def del_member(request, group_id, user_number):
+def del_member(request, group_id, to_id, user_number):
 
     group = Group.objects.get(id = group_id)
     if group.leader != request.user:
@@ -126,8 +130,7 @@ def del_member(request, group_id, user_number):
             aim = user
             break
     group.member.remove(aim)
-    return HttpResponseRedirect(reverse('users:change_member', args=[group_id]))
-
+    return HttpResponseRedirect(reverse('users:change_member', args=[group_id, to_id]))
 
 @login_required
 def group_info(request, group_id):
@@ -140,23 +143,22 @@ def group_info(request, group_id):
     LeadFlag = True
     if group.leader != request.user:
         LeadFlag = False
-    context = {'group':group, 'LeadFlag':LeadFlag}
+    
+    todos = group.grouptask_set.filter(tag = False).order_by('date_ended')
+    finisheds = group.grouptask_set.filter(tag = True).order_by('date_ended')
+    
+    context = {'group':group, 'LeadFlag':LeadFlag, 'todos':todos, 'finisheds':finisheds}
     return render(request, 'users/group_info.html', context)
-    
-'''
-    if request.method != 'POST':
-        # 初次请求, 使用当前条目填充表单
-        form = GroupForm(instance = group)
-    else:
-        # POST提交的数据, 对数据进行处理
-        form = GroupForm(instance = group, data = request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('users:group'))
-    
-    context = {'group':group, 'form':form}
-    return render(request, 'users/edit_group.html', context)
-'''
+
+@login_required
+def del_group(request, group_id):
+
+    group = Group.objects.get(id = group_id)
+    if group.leader != request.user:
+        raise Http404
+    group.delete()
+    return HttpResponseRedirect(reverse('users:group',))
+
 '''
 def register(request):
     """注册新用户"""

@@ -11,8 +11,9 @@ urlpatterns = [
     url(r'^register/$', views.register, name = 'register'),
     url(r'^group/$', views.group, name = 'group'),
     url(r'^new_group/$', views.new_group, name = 'new_group'),
-    url(r'^choose_member/(?P<group_id>\d+)/$', views.add_member, name = 'change_member'),
-    url(r'^del_member/(?P<group_id>\d+)/(?P<user_number>\d+)/$', views.del_member, name = 'del_member'),
-    url(r'^change_group_name/(?P<group_id>\d+)/$', views.change_group_name, name = 'change_group_name'),
+    url(r'^choose_member/(?P<group_id>\d+)/(?P<to_id>\d+)/$', views.add_member, name = 'change_member'),
+    url(r'^del_member/(?P<group_id>\d+)/(?P<to_id>\d+)/(?P<user_number>\d+)/$', views.del_member, name = 'del_member'),
+    url(r'^change_group_name/(?P<group_id>\d+)/(?P<to_id>\d+)/$', views.change_group_name, name = 'change_group_name'),
     url(r'^group_info/(?P<group_id>\d+)/$', views.group_info, name = 'group_info'),
+    url(r'^del_group/(?P<group_id>\d+)/$', views.del_group, name = 'del_group')
 ]

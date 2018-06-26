@@ -7,7 +7,7 @@
 
 {% block content %}
 
-    <form action = "{% url 'users:change_group_name' group.id%}" method = 'post' class = "form">
+    <form action = "{% url 'users:change_group_name' group.id to_id%}" method = 'post' class = "form">
 	  {% csrf_token %}
 	  {% bootstrap_form form %}
 	  <button name = 'submit'>Change</button>

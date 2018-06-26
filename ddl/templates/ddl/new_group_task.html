@@ -8,26 +8,23 @@
 
 {% block content %}
 
-
         <script>
            function YYYYMMDDstart()   
-           {   
+           {
                MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];   
-               //先给年下拉框赋内容   
                var y  = new Date().getFullYear();   
-               for (var i = (y-30); i < (y+30); i++) //以今年为准，前30年，后30年   
-                       document.reg_testdate.YYYY.options.add(new Option(" "+ i +" 年", i));   
+               for (var i = (y-30); i < (y+30); i++)  
+                       document.reg_testdate.YYYY.options.add(new Option(" "+ i +" Year", i));   
         
-               //赋月份的下拉框   
                for (var i = 1; i < 13; i++)   
 
-                       document.reg_testdate.MM.options.add(new Option(" " + i + " 月", i));   
+                       document.reg_testdate.MM.options.add(new Option(" " + i + " Month", i));   
         
                document.reg_testdate.YYYY.value = y;   
                document.reg_testdate.MM.value = new Date().getMonth() + 1;   
                var n = MonHead[new Date().getMonth()];   
                if (new Date().getMonth() ==1 && IsPinYear(YYYYvalue)) n++;   
-                    writeDay(n); //赋日期下拉框Author:meizz   
+                    writeDay(n);
                document.reg_testdate.DD.value = new Date().getDate();   
            }   
            if(document.attachEvent)   
@@ -35,7 +32,7 @@
            else   
                window.addEventListener('load', YYYYMMDDstart, false);   
            
-           function YYYYDD(str) //年发生变化时日期发生变化(主要是判断闰平年)   
+           function YYYYDD(str)
            {   
                var MMvalue = document.reg_testdate.MM.options[document.reg_testdate.MM.selectedIndex].value;   
                if (MMvalue == ""){ var e = document.reg_testdate.DD; optionsClear(e); return;}   
@@ -43,7 +40,7 @@
                if (MMvalue ==2 && IsPinYear(str)) n++;   
                     writeDay(n)   
            }   
-           function MMDD(str)   //月发生变化时日期联动   
+           function MMDD(str)
            {
                 var YYYYvalue = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value;   
                 if (YYYYvalue == ""){ var e = document.reg_testdate.DD; optionsClear(e); return;}   
@@ -51,13 +48,13 @@
                 if (str ==2 && IsPinYear(YYYYvalue)) n++;   
                 writeDay(n)   
            }   
-           function writeDay(n)   //据条件写日期的下拉框   
+           function writeDay(n)
            {   
                var e = document.reg_testdate.DD; optionsClear(e);   
                for (var i=1; i<(n+1); i++)   
-                    e.options.add(new Option(" "+ i + " 日", i));   
+                    e.options.add(new Option(" "+ i + " Date", i));   
            }   
-           function IsPinYear(year)//判断是否闰平年   
+           function IsPinYear(year)
            {     return(0 == year%4 && (year%100 !=0 || year%400 == 0));}   
            function optionsClear(e)   
            {   
@@ -67,13 +64,9 @@
   
         </script>
         
-    <form name="reg_testdate" action = "{% url 'ddl:new_entry'%}" method = 'post'>
+    <form name="reg_testdate" action = "{% url 'ddl:new_group_task' group.id %}" method = 'post'>
         {% csrf_token %}
 
-<!--		<div>
-          <label>Title:</label>
-        <input type="text" name="title"  required id = "id_title"></input><br>
--->		
 		<div class="form-group">
 		  <label class="control-label" for="id_name">Task Name:</label>
 		  <input type="text" name="title" class="form-control" placeholder="Task Name" required id="id_title" />
@@ -82,19 +75,21 @@
 		<div class = "form-group">
 		  <label class="control-label" for="id_name">Deadline:</label> &nbsp
 	    
-<!--        <label>Deadline:</label> -->
           <select id="YYYY" name="YYYY" onchange="YYYYDD(this.value)" required id = "id_YYYY">
-            <option value="">请选择 年</option>
+            <option value="">Choose Year</option>
           </select> &nbsp
           <select id="MM" name="MM" onchange="MMDD(this.value)" required id = "id_MM">
-            <option value="">选择 月</option>
+            <option value="">Choose Mouth</option>
           </select> &nbsp
           <select id="DD" name="DD" required id = "id_DD">
-            <option value="">选择 日</option>
+            <option value="">Choose Date</option>
           </select>
 		  <br>
+		  
+		  <label class="control-label" for="id_name">Member:</label>
+		  <br>
+		  
 		  <label class="control-label" for="id_name">Content:</label>
-<!--        <label>Content:</label> -->
           <input type="text" name="tag" value="False" required id = "id_tag" style="visibility:hidden"></input>
           <input type="text" name="date_ended" value="2018-01-01" required id = "id_date_ended" style="visibility:hidden"></input>
         
@@ -103,9 +98,7 @@
 		  </div>
 		</div>
 		
-<!--		<p> <textarea name="text" cols="80" rows="10" required id="id_text"></textarea></p> -->
         <button name = 'submit'>Add</button>
       </div>
 	</form>
 {% endblock content %}
-

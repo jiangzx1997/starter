@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 
 class MyUser(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
+    name = models.TextField(max_length = 20)
     number = models.TextField(max_length = 8)
 
 class Group(models.Model):

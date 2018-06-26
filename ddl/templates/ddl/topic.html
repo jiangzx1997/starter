@@ -20,12 +20,13 @@
   {% for todo in todos %}
 	<div class = "panel panel-default">
 	  <div class = "panel-heading">
-      <span style="float: right">
+<!--        <span style="float: right">
             <a href="{% url 'ddl:delete_entry' todo.id %}">X</a>
-        </span>
+        </span> -->
 	    <h3>
-		      <a href = "{% url 'ddl:edit_entry' todo.id %}">{{ todo.date_ended|date:'Y-n-d' }}   {{todo.title}}</a>
-      </h3>
+		  <a href = "{% url 'ddl:edit_entry' todo.id %}">{{ todo.date_ended|date:'Y-n-d' }}   {{todo.title}}</a>
+		  <button type="button" class="close" aria-label="Close" onclick="window.location.href='{% url 'ddl:delete_entry' todo.id %}'"><span aria-hidden="true">×</span></button>
+        </h3>
     </div>
 	  <div class = "panel-body">
       <h4>
@@ -46,12 +47,12 @@
   {% for finished in finisheds %}
     <div class = "panel panel-default">
       <div class = "panel-heading">
-        <span style="float: right">
+<!--        <span style="float: right">
             <a href="{% url 'ddl:delete_entry' finished.id %}">X</a>
-        </span>
+        </span> -->
         <h3>
             <a href = "{% url 'ddl:edit_entry' finished.id %}">{{ finished.date_ended|date:'Y-n-d' }} {{finished.title}}</a>
-          
+			<button type="button" class="close" aria-label="Close" onclick="window.location.href='{% url 'ddl:delete_entry' finished.id %}'"><span aria-hidden="true">×</span></button>
         </h3>
       </div>
       <div class = "panel-body">

@@ -33,7 +33,7 @@
 	<tbody>
 	  <tr>
 	    <td> {{group.leader.myuser.number}} </td>
-		<td> {{group.leader.username}} </td>
+		<td> {{group.leader.myuser.name}} </td>
 		<td> 组长 </td>
 		<td></td>
 	  </tr>
@@ -44,9 +44,9 @@
 		  {% if user != group.leader %}
   		    <tr>
 		      <td> {{ user.myuser.number }} </td>
-			  <td> {{ user.username }} </td>
+			  <td> {{ user.myuser.name }} </td>
 			  <td> 组员 </td>
-			  <td> <a href=" {% url 'users:del_member' group.id user.myuser.number %} ">删除</a> </td>
+			  <td> <a href=" {% url 'users:del_member' group.id to_id user.myuser.number %} ">删除</a> </td>
 		    </tr>
 		  {% endif %}
 		{% endfor %}
@@ -54,7 +54,7 @@
   </table>
 
 
-  <form action = "{% url 'users:change_member' group.id %}" method = 'post' class = "form">
+  <form action = "{% url 'users:change_member' group.id to_id %}" method = 'post' class = "form">
 	{% csrf_token %}
 	{% bootstrap_form form %}
 
@@ -67,9 +67,14 @@
   <br>
 
   <center> 
-    <input type="button" value="Back" onclick="window.location.href='{% url 'users:change_group_name' group.id %}'">
+  
+    {% if to_id == '0' %}
+      <input type="button" value="Back" class="btn btn-default" onclick="window.location.href='{% url 'users:change_group_name' group.id 0 %}'">
+    {% else %}
+	  <input type="button" value="Back" class="btn btn-default" onclick="window.location.href='{% url 'users:group_info' group.id %}'">
+	{% endif %}
 	&nbsp &nbsp &nbsp
-	<input type="button" value="Finish" onclick="window.location.href='{% url 'users:group' %}'"> 
+	<input type="button" value="Finish" class="btn btn-default" onclick="window.location.href='{% url 'users:group_info' group.id %}'"> 
   </center>
 
 {% endblock content %}

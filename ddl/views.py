@@ -6,23 +6,15 @@ from django.contrib.auth.decorators import login_required
 from django.db import models
 
 from .models import Topic, Entry
-from .forms import EntryForm
+from .forms import EntryForm, GroupTaskForm
 from datetime import datetime
+
+from users.models import Group
 
 # Create your views here.
 def index(request):
     """学习笔记的主页"""
     return render(request, 'ddl/index.html')
-
-'''
-@login_required
-def topics(request):
-    """显示所有的主题"""
-    topics = Topic.objects.filter(owner = request.user).order_by('date_added')
-    context = {'topics__':topics}
-    return render(request, 'ddl/topics.html', context)
-'''
-
 
 @login_required
 def topic(request):
@@ -36,25 +28,6 @@ def topic(request):
     context = {'todos':todos, 'finisheds':finisheds}
     return render(request, 'ddl/topic.html', context)
 
-'''
-@login_required   
-def new_topic(request):
-    """添加新主题"""
-    if request.method != 'POST':
-        # 未提交数据：创建一个新表单
-        form = TopicForm()
-    else:
-        # POST提交的数据，对数据进行处理
-        form = TopicForm(request.POST)
-        if form.is_valid():
-            new_topic = form.save(commit = False)
-            new_topic.owner = request.user
-            new_topic.save()
-            return HttpResponseRedirect(reverse('ddl:topics'))
-    context = {'form':form}
-    return render(request, 'ddl/new_topic.html', context)
-'''
-
 def date_to_string(YYYY, MM, DD):
     date = str(YYYY) + '-'
     if MM < 10:
@@ -67,22 +40,15 @@ def date_to_string(YYYY, MM, DD):
 @login_required
 def new_entry(request):
     """在特定的主题中添加新条目"""
-#    topic = Topic.objects.get(id = topic_id)
     if request.method != 'POST':
-        # 未提交数据, 创建一个空表单
         form = EntryForm()
     else:
-        # POST提交的数据, 对数据进行处理
         form = EntryForm(data = request.POST)
         if form.is_valid():
             new_entry = form.save(commit = False)
             new_entry.owner = request.user
-            #new_entry.date_ended = date_to_string(new_entry.YYYY, new_entry.MM, new_entry.DD)
             new_entry.date_ended = datetime(new_entry.YYYY, new_entry.MM, new_entry.DD)
-            #new_entry.date_ended = "2018-02-01"
             new_entry.save()
-            #new_entry.objects.fliter(owner = request.user).update(
-            #    date_ended = models.DateTimeField(new_entry.YYYY, new_entry.MM, new_entry.DD))
             return HttpResponseRedirect(reverse('ddl:topic'))
     context = {'form':form}
     return render(request, 'ddl/new_entry.html', context)
@@ -131,4 +97,25 @@ def finish_entry(request, entry_id):
 
     Entry.objects.filter(id = entry_id).update(tag=True)
     return HttpResponseRedirect(reverse('ddl:topic'))
+
+@login_required
+def new_group_task(request, group_id):
+    """在特定的主题中添加新条目"""
+    group = Group.objects.get(id = group_id)
     
+    if group.leader != request.user:
+        raise Http404
+    
+    if request.method != 'POST':
+        form = GroupTaskForm()
+    else:
+        form = GroupTaskForm(data = request.POST)
+        if form.is_valid():
+            new_entry = form.save(commit = False)
+            new_entry.owner = request.user
+            new_entry.group = group
+            new_entry.date_ended = datetime(new_entry.YYYY, new_entry.MM, new_entry.DD)
+            new_entry.save()
+            return HttpResponseRedirect(reverse('users:group_info', args=[group_id]))
+    context = {'group':group, 'form':form}
+    return render(request, 'ddl/new_group_task.html', context)

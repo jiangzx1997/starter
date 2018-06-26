@@ -7,7 +7,7 @@
   </h2>
   {% if user == group.leader %}
   <small>
-    <a href = "{% url 'users:change_group_name' group.id %}"> edit </a>
+    <a href = "{% url 'users:change_group_name' group.id 1 %}"> edit </a>
   </small>
   {% endif %}
 {% endblock header %}
@@ -22,7 +22,7 @@
   {% if user == group.leader %}
     <div style = "text-align:right;">
       <small>
-        <a href = "{% url 'users:change_member' group.id %}"> Edit </a>
+        <a href = "{% url 'users:change_member' group.id 1 %}"> Edit </a>
       </small>
     </div>
   {% endif %}
@@ -40,7 +40,7 @@
 	<tbody>
 	  <tr>
 	    <td> {{group.leader.myuser.number}} </td>
-		<td> {{group.leader.username}} </td>
+		<td> {{group.leader.myuser.name}} </td>
 		<td> Leader </td>
 	  </tr>
 	</tbody>
@@ -50,12 +50,71 @@
 		  {% if user != group.leader %}
   		    <tr>
 		      <td> {{ user.myuser.number }} </td>
-			  <td> {{ user.username }} </td>
+			  <td> {{ user.myuser.name }} </td>
 			  <td>  Member </td>
 		    </tr>
 		  {% endif %}
 		{% endfor %}
 	</tbody>
   </table>
+  
+  
+  <a href = "{% url 'ddl:new_group_task' group.id %}">Add new task</a>
+  <br>
+   
+  <h3>Unfinished</h3>
+    
+  {% for todo in todos %}
+	<div class = "panel panel-default">
+	  <div class = "panel-heading">
+<!--        <span style="float: right">
+            <a href="{% url 'ddl:delete_entry' todo.id %}">X</a>
+        </span> -->
+	    <h3>
+		  <a href = "{% url 'ddl:edit_entry' todo.id %}">{{ todo.date_ended|date:'Y-n-d' }}   {{todo.title}}</a>
+		  <button type="button" class="close" aria-label="Close" onclick="window.location.href='{% url 'ddl:delete_entry' todo.id %}'"><span aria-hidden="true">×</span></button>
+        </h3>
+    </div>
+	  <div class = "panel-body">
+      <h4>
+	    {{ todo.text|linebreaks }}
+      </h4>
+          <p align="right">
+            <a href="{% url 'ddl:finish_entry' todo.id %}">finish task</a>
+          </p>
+	  </div>
+	</div><!-- panel -->
+  {% empty %}
+	There are no tasks for this part yet.
+  {% endfor %}
+  <div class = "intro">
+    <h3>Finished</h3>
+  </div>
+
+  {% for finished in finisheds %}
+    <div class = "panel panel-default">
+      <div class = "panel-heading">
+<!--        <span style="float: right">
+            <a href="{% url 'ddl:delete_entry' finished.id %}">X</a>
+        </span> -->
+        <h3>
+            <a href = "{% url 'ddl:edit_entry' finished.id %}">{{ finished.date_ended|date:'Y-n-d' }} {{finished.title}}</a>
+			<button type="button" class="close" aria-label="Close" onclick="window.location.href='{% url 'ddl:delete_entry' finished.id %}'"><span aria-hidden="true">×</span></button>
+        </h3>
+      </div>
+      <div class = "panel-body">
+        <h4>
+          {{ finished.text|linebreaks }}
+        </h4>
+        <p align="right">
+          <a href="{% url 'ddl:finish_entry' finished.id %}">finish task</a>
+        </p>
+          
+      </div>
+    </div><!-- panel -->
+  {% empty %}
+    There are no tasks for this part yet.
+  {% endfor %}
+
   
 {% endblock content %}

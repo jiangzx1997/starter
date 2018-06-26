@@ -27,4 +27,7 @@ urlpatterns = [
 
     # finish entry
     url(r'^finish_entry/(?P<entry_id>\d+)/$', views.finish_entry, name = 'finish_entry'),
+    
+    # new group task
+    url(r'^new_group_task/(?P<group_id>\d+)/$', views.new_group_task, name = 'new_group_task'),
 ]
