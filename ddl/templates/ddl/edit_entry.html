@@ -61,10 +61,14 @@
             e.options.length = 1;   
        }   
     </script>
-    <p>Edit task:</p>
 
     <form name = "reg_testdate" action = "{% url 'ddl:edit_entry' entry.id %}" method = 'post'>
 	  {% csrf_token %}
+    <div>
+      <label>Title:</label>
+        <input type="text" name="title" value="{{ entry.title }}" required id = "id_title"></input><br>
+    
+      <label>Date:</label>
 	  <select name="YYYY" onchange="YYYYDD(this.value)" required id = "id_YYYY">
                 <option value="">请选择 年</option>
             </select>
@@ -74,10 +78,13 @@
             <select name="DD" required id = "id_DD">
                 <option value="">选择 日</option>
             </select>
+            <br>
+        <label>Content:</label>
         <input type="text" name="tag" value="False" required id = "id_tag" style="visibility:hidden"></input>
         <input type="text" name="date_ended" value="2018-01-01" required id = "id_date_ended" style="visibility:hidden"></input>
-        <p> <textarea name="text" cols="80" rows="10" required id="id_text"></textarea></p>
-	  <button name = "submit">save changes</button>
+        <p> <textarea name="text" cols="80" rows="10" required id="id_text">{{entry.text}}</textarea></p>
+	     <button name = "submit">save changes</button>
+    </div>
 	</form>
   
 {% endblock content %}

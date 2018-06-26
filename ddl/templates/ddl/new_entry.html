@@ -20,6 +20,7 @@
         
                //赋月份的下拉框   
                for (var i = 1; i < 13; i++)   
+
                        document.reg_testdate.MM.options.add(new Option(" " + i + " 月", i));   
         
                document.reg_testdate.YYYY.value = y;   
@@ -68,7 +69,10 @@
         
     <form name="reg_testdate" action = "{% url 'ddl:new_entry'%}" method = 'post'>
         {% csrf_token %}
-       <div><label>Date:</label>
+       <div>
+          <label>Title:</label>
+        <input type="text" name="title"  required id = "id_title"></input><br>
+        <label>Date:</label>
         <select id="YYYY" name="YYYY" onchange="YYYYDD(this.value)" required id = "id_YYYY">
                 <option value="">请选择 年</option>
             </select>
@@ -79,8 +83,6 @@
                 <option value="">选择 日</option>
             </select>
             <br>
-          <label>Title:</label>
-        <input type="text" name="title"  required id = "id_title"></input><br>
         <label>Content:</label>
         <input type="text" name="tag" value="False" required id = "id_tag" style="visibility:hidden"></input>
         <input type="text" name="date_ended" value="2018-01-01" required id = "id_date_ended" style="visibility:hidden"></input>
