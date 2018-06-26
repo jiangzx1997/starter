@@ -11,7 +11,7 @@ class Topic(models.Model):
     def __str__(self):
         return self.text
 
-
+'''
 class Entry(models.Model):
 #    topic = models.ForeignKey(Topic, on_delete = models.CASCADE)
     YYYY = models.IntegerField()
@@ -26,6 +26,7 @@ class Entry(models.Model):
     
     def __str__(self):
         return self.text[:50] + "..."
+'''
 
 class GroupTask(models.Model):
     YYYY = models.IntegerField()
@@ -36,6 +37,7 @@ class GroupTask(models.Model):
     tag = models.BooleanField()
     date_added = models.DateTimeField(auto_now_add = True)
     title = models.TextField()
+    UserID = models.TextField()
     owner = models.ForeignKey(User, on_delete = models.CASCADE)
     group = models.ForeignKey(Group, on_delete = models.CASCADE)
     

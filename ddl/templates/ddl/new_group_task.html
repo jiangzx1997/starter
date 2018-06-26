@@ -60,6 +60,8 @@
            {   
                 e.options.length = 1;   
            }
+
+  
         </script>
         
     <form name="reg_testdate" action = "{% url 'ddl:new_group_task' group.id %}" method = 'post'>
@@ -85,6 +87,11 @@
 		  <br>
 		  
 		  <label class="control-label" for="id_name">Member:</label>
+		  <select id="UserID" name="UserID" required id = "id_UserID">
+			{% for user in group.member.all %}
+			  <option value="{{ user.myuser.number }}">{{ user.myuser.number }} {{ user.myuser.name }}</option>
+			{% endfor %}
+          </select>
 		  <br>
 		  
 		  <label class="control-label" for="id_name">Content:</label>

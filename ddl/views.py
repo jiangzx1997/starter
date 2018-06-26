@@ -5,8 +5,8 @@ from django.urls import reverse # 此处有改动
 from django.contrib.auth.decorators import login_required
 from django.db import models
 
-from .models import Topic, Entry
-from .forms import EntryForm, GroupTaskForm
+from .models import Topic, GroupTask
+from .forms import GroupTaskForm
 from datetime import datetime
 
 from users.models import Group
@@ -23,8 +23,9 @@ def topic(request):
     # 确认请求的主题属于当前用户
 #    if topic.owner != request.user:
 #        raise Http404
-    todos = Entry.objects.filter(owner = request.user, tag = False).order_by('date_ended')
-    finisheds = Entry.objects.filter(owner = request.user, tag = True).order_by('date_ended')
+    todos = GroupTask.objects.filter(owner = request.user, tag = False).order_by('date_ended')
+    finisheds = GroupTask.objects.filter(owner = request.user, tag = True).order_by('date_ended')
+    
     context = {'todos':todos, 'finisheds':finisheds}
     return render(request, 'ddl/topic.html', context)
 
@@ -41,13 +42,14 @@ def date_to_string(YYYY, MM, DD):
 def new_entry(request):
     """在特定的主题中添加新条目"""
     if request.method != 'POST':
-        form = EntryForm()
+        form = GroupTaskForm()
     else:
-        form = EntryForm(data = request.POST)
+        form = GroupTaskForm(data = request.POST)
         if form.is_valid():
             new_entry = form.save(commit = False)
             new_entry.owner = request.user
             new_entry.date_ended = datetime(new_entry.YYYY, new_entry.MM, new_entry.DD)
+            new_entry.group = Group.objects.all()[0]
             new_entry.save()
             return HttpResponseRedirect(reverse('ddl:topic'))
     context = {'form':form}
@@ -56,7 +58,7 @@ def new_entry(request):
 @login_required
 def edit_entry(request, entry_id):
     """编辑既有条目"""
-    entry = Entry.objects.get(id = entry_id)
+    entry = GroupTask.objects.get(id = entry_id)
 #    topic = entry.topic
     
     if entry.owner != request.user:
@@ -64,11 +66,11 @@ def edit_entry(request, entry_id):
     
     if request.method != 'POST':
         # 初次请求, 使用当前条目填充表单
-        form = EntryForm(instance = entry)
+        form = GroupTaskForm(instance = entry)
 
     else:
         # POST提交的数据, 对数据进行处理
-        form = EntryForm(instance = entry, data = request.POST)
+        form = GroupTaskForm(instance = entry, data = request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('ddl:topic'))
@@ -79,24 +81,27 @@ def edit_entry(request, entry_id):
 @login_required
 def delete_entry(request, entry_id):
     """删除既有条目"""
-    entry = Entry.objects.get(id = entry_id)
+    entry = GroupTask.objects.get(id = entry_id)
 
     if entry.owner != request.user:
         raise Http404
 
-    Entry.objects.filter(id = entry_id).delete()
+    GroupTask.objects.filter(id = entry_id).delete()
     return HttpResponseRedirect(reverse('ddl:topic'))
 
 @login_required
-def finish_entry(request, entry_id):
+def finish_entry(request, entry_id, to_id):
     """完成既有条目"""
-    entry = Entry.objects.get(id = entry_id)
+    entry = GroupTask.objects.get(id = entry_id)
 
     if entry.owner != request.user:
         raise Http404
 
-    Entry.objects.filter(id = entry_id).update(tag=True)
-    return HttpResponseRedirect(reverse('ddl:topic'))
+    GroupTask.objects.filter(id = entry_id).update(tag=True)
+    if to_id == '0':
+        return HttpResponseRedirect(reverse('ddl:topic'))
+    else:
+        return HttpResponseRedirect(reverse('users:group_info', args=[to_id]))
 
 @login_required
 def new_group_task(request, group_id):
@@ -112,7 +117,11 @@ def new_group_task(request, group_id):
         form = GroupTaskForm(data = request.POST)
         if form.is_valid():
             new_entry = form.save(commit = False)
-            new_entry.owner = request.user
+#            new_entry.owner = request.user
+            for user in group.member.all():
+                if user.myuser.number == new_entry.UserID:
+                    new_entry.owner = user
+                    break
             new_entry.group = group
             new_entry.date_ended = datetime(new_entry.YYYY, new_entry.MM, new_entry.DD)
             new_entry.save()

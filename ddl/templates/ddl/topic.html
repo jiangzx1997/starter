@@ -7,7 +7,7 @@
 
 {% block content %}
 
-   <a href = "{% url 'ddl:new_entry' %}">add new task</a>
+   <a href = "{% url 'ddl:new_entry' %}">Add new task</a>
    <br>
     <div class = "container">
       <div class = "intro">
@@ -24,7 +24,17 @@
             <a href="{% url 'ddl:delete_entry' todo.id %}">X</a>
         </span> -->
 	    <h3>
-		  <a href = "{% url 'ddl:edit_entry' todo.id %}">{{ todo.date_ended|date:'Y-n-d' }}   {{todo.title}}</a>
+		  <a href = "{% url 'ddl:edit_entry' todo.id %}">
+		    {{ todo.date_ended|date:'Y-n-d' }}   
+			{{todo.title}}
+	      </a>
+		  
+		  {% if todo.group.id == 1 %}
+		    [Self Task]
+		  {% else %}
+		    [Group Task]
+	      {% endif %}
+		  
 		  <button type="button" class="close" aria-label="Close" onclick="window.location.href='{% url 'ddl:delete_entry' todo.id %}'"><span aria-hidden="true">×</span></button>
         </h3>
     </div>
@@ -33,7 +43,7 @@
 	    {{ todo.text|linebreaks }}
       </h4>
           <p align="right">
-            <a href="{% url 'ddl:finish_entry' todo.id %}">finish task</a>
+            <a href="{% url 'ddl:finish_entry' todo.id 0 %}">finish task</a>
           </p>
 	  </div>
 	</div><!-- panel -->
@@ -51,7 +61,17 @@
             <a href="{% url 'ddl:delete_entry' finished.id %}">X</a>
         </span> -->
         <h3>
-            <a href = "{% url 'ddl:edit_entry' finished.id %}">{{ finished.date_ended|date:'Y-n-d' }} {{finished.title}}</a>
+            <a href = "{% url 'ddl:edit_entry' finished.id %}">
+			  {{ finished.date_ended|date:'Y-n-d' }} 
+			  {{finished.title}}
+			</a>
+			
+		    {% if finished.group.id == 1 %}
+		      [Self Task]
+		    {% else %}
+				[Group: <a href = "{% url 'users:group_info' finished.group.id %}"> {{ finished.group.name }} </a> ]
+	        {% endif %}
+			
 			<button type="button" class="close" aria-label="Close" onclick="window.location.href='{% url 'ddl:delete_entry' finished.id %}'"><span aria-hidden="true">×</span></button>
         </h3>
       </div>
@@ -59,10 +79,6 @@
         <h4>
           {{ finished.text|linebreaks }}
         </h4>
-        <p align="right">
-          <a href="{% url 'ddl:finish_entry' finished.id %}">finish task</a>
-        </p>
-          
       </div>
     </div><!-- panel -->
   {% empty %}

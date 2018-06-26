@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^delete_entry/(?P<entry_id>\d+)/$', views.delete_entry, name = 'delete_entry'),
 
     # finish entry
-    url(r'^finish_entry/(?P<entry_id>\d+)/$', views.finish_entry, name = 'finish_entry'),
+    url(r'^finish_entry/(?P<entry_id>\d+)/(?P<to_id>\d+)/$', views.finish_entry, name = 'finish_entry'),
     
     # new group task
     url(r'^new_group_task/(?P<group_id>\d+)/$', views.new_group_task, name = 'new_group_task'),

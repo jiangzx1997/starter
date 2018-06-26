@@ -58,8 +58,9 @@
 	</tbody>
   </table>
   
-  
-  <a href = "{% url 'ddl:new_group_task' group.id %}">Add new task</a>
+  {% if user == group.leader %}
+    <a href = "{% url 'ddl:new_group_task' group.id %}">Add new task</a>
+  {% endif %}
   <br>
    
   <h3>Unfinished</h3>
@@ -71,7 +72,11 @@
             <a href="{% url 'ddl:delete_entry' todo.id %}">X</a>
         </span> -->
 	    <h3>
-		  <a href = "{% url 'ddl:edit_entry' todo.id %}">{{ todo.date_ended|date:'Y-n-d' }}   {{todo.title}}</a>
+		  <a href = "{% url 'ddl:edit_entry' todo.id %}">
+		    {{ todo.date_ended|date:'Y-n-d' }}   
+			{{todo.title}}
+	      </a>
+		  [{{ finished.owner.myuser.name }}]
 		  <button type="button" class="close" aria-label="Close" onclick="window.location.href='{% url 'ddl:delete_entry' todo.id %}'"><span aria-hidden="true">×</span></button>
         </h3>
     </div>
@@ -80,7 +85,7 @@
 	    {{ todo.text|linebreaks }}
       </h4>
           <p align="right">
-            <a href="{% url 'ddl:finish_entry' todo.id %}">finish task</a>
+            <a href="{% url 'ddl:finish_entry' todo.id group.id %}">finish task</a>
           </p>
 	  </div>
 	</div><!-- panel -->
@@ -98,7 +103,11 @@
             <a href="{% url 'ddl:delete_entry' finished.id %}">X</a>
         </span> -->
         <h3>
-            <a href = "{% url 'ddl:edit_entry' finished.id %}">{{ finished.date_ended|date:'Y-n-d' }} {{finished.title}}</a>
+            <a href = "{% url 'ddl:edit_entry' finished.id %}">
+			  {{ finished.date_ended|date:'Y-n-d' }}
+			  {{finished.title}}
+			</a>
+		    [{{ finished.owner.myuser.name }}]
 			<button type="button" class="close" aria-label="Close" onclick="window.location.href='{% url 'ddl:delete_entry' finished.id %}'"><span aria-hidden="true">×</span></button>
         </h3>
       </div>
@@ -106,9 +115,6 @@
         <h4>
           {{ finished.text|linebreaks }}
         </h4>
-        <p align="right">
-          <a href="{% url 'ddl:finish_entry' finished.id %}">finish task</a>
-        </p>
           
       </div>
     </div><!-- panel -->
